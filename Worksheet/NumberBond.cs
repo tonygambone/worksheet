@@ -27,35 +27,36 @@ namespace Worksheet
                 };
         }
 
-        public static NumberBond GetRandomNumberBond(int sum)
+        public static IEnumerable<NumberBond> GetAllNumberBonds()
         {
-            var a1 = rand.Next(0, sum);
-            return new NumberBond { Sum = sum, Addend1 = a1, Addend2 = sum - a1 };
-        }
-
-        public static IEnumerable<NumberBond> GetRandomNumberBonds()
-        {
-            while (true)
+            for (int i = 0; i <= 10; i++)
             {
-                var sum = rand.Next(0, 11);
-                yield return GetRandomNumberBond(sum);
+                foreach (var bond in GetNumberBonds(i))
+                {
+                    yield return bond;
+                }
             }
         }
 
         public static IEnumerable<NumberBond> GetRandomNumberBondProblems()
         {
-            foreach (var b in GetRandomNumberBonds())
+            var bonds = GetAllNumberBonds().ToList();
+            var count = bonds.Count;
+            NumberBond bond;
+
+            while (true)
             {
+                bond = (NumberBond)bonds[rand.Next(0, count)].MemberwiseClone();
                 switch (rand.Next(0, 3))
                 {
                     case 0:
-                        b.Sum = null; break;
+                        bond.Sum = null; break;
                     case 1:
-                        b.Addend1 = null; break;
+                        bond.Addend1 = null; break;
                     case 2:
-                        b.Addend2 = null; break;
+                        bond.Addend2 = null; break;
                 }
-                yield return b;
+                yield return bond;
             }
         }
 
